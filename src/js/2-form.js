@@ -9,9 +9,8 @@ const refs = {
 };
 
 function inputHandler() {
-    const email = refs.input.value;
-    const message = refs.textarea.value;
-    
+    const email = refs.input.value.trim(); 
+    const message = refs.textarea.value.trim(); 
     return {
         email,
         message
@@ -20,31 +19,25 @@ function inputHandler() {
 
 refs.form.addEventListener('submit', (event) => {
     event.preventDefault();
-    const takesValue = JSON.parse(localStorage.getItem(storageKey)) || {};
+    const data = inputHandler();
 
-    if (takesValue.email && takesValue.message) {
-        console.log({
-            email: takesValue.email,
-            message: takesValue.message,
+    if (data.email && data.message) { 
+        console.log(data); 
 
-        });
-        
         localStorage.removeItem(storageKey);
         refs.form.reset();
     }
+});
 
-})
-
-refs.form.addEventListener('input', (event) => {
-    const data = inputHandler(event.currentTarget);
+refs.form.addEventListener('input', () => {
+    const data = inputHandler();
     const jsonData = JSON.stringify(data);
     localStorage.setItem(storageKey, jsonData);
-})
+});
 
-const takesItem = localStorage.getItem(storageKey);
-
-if (takesItem ) {
-    const data = JSON.parse(takesItem);
+const storedData = localStorage.getItem(storageKey);
+if (storedData) {
+    const data = JSON.parse(storedData);
     refs.input.value = data.email;
     refs.textarea.value = data.message;
 }
